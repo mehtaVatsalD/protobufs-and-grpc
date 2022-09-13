@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package services;
+
+import "models/User.proto";
+
+option java_multiple_files = true;
+option java_package = "io.simplecoder.grpc.unary.generated.protobufs.services";
+
+service UserService {
+    rpc RegisterUser(models.UserRegistrationRequest) returns (models.UserResponse);
+    rpc GetUserById(models.UserQueryByIdRequest) returns (models.UserResponse);
+}
