@@ -1,8 +1,8 @@
 package io.simplecoder.grpc.client;
 
-import io.simplecoder.grpc.generated.protobufs.models.NthPrimeNumberRequest;
-import io.simplecoder.grpc.generated.protobufs.models.NthPrimeNumberResponse;
-import io.simplecoder.grpc.generated.protobufs.models.PrimeNumbersServiceGrpc;
+import io.simplecoder.grpc.generated.protobufs.NthPrimeNumberRequest;
+import io.simplecoder.grpc.generated.protobufs.NthPrimeNumberResponse;
+import io.simplecoder.grpc.generated.protobufs.PrimeNumbersServiceGrpc;
 
 import static io.simplecoder.grpc.utils.ChannelUtil.getManagedChannel;
 

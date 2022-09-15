@@ -1,9 +1,9 @@
 package io.simplecoder.grpc.client;
 
-import io.simplecoder.grpc.generated.protobufs.models.*;
+import io.simplecoder.grpc.generated.protobufs.FirstNPrimeNumbersRequest;
+import io.simplecoder.grpc.generated.protobufs.PrimeNumbersServiceGrpc;
 import io.simplecoder.grpc.observers.response.FirstNPrimeNumbersResponseObserver;
 
-import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
 import static io.simplecoder.grpc.utils.ChannelUtil.getManagedChannel;

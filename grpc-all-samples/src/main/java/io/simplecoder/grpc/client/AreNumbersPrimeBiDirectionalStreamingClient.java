@@ -1,10 +1,9 @@
 package io.simplecoder.grpc.client;
 
 import io.grpc.stub.StreamObserver;
-import io.simplecoder.grpc.generated.protobufs.models.AreNumbersPrimeRequestChunk;
-import io.simplecoder.grpc.generated.protobufs.models.PrimeNumbersServiceGrpc;
+import io.simplecoder.grpc.generated.protobufs.AreNumbersPrimeRequestChunk;
+import io.simplecoder.grpc.generated.protobufs.PrimeNumbersServiceGrpc;
 import io.simplecoder.grpc.observers.response.AreNumbersPrimeAsyncResponseObserver;
-import io.simplecoder.grpc.observers.response.AreNumbersPrimeResponseObserver;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;

@@ -2,9 +2,9 @@ package io.simplecoder.grpc.observers.request;
 
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import io.simplecoder.grpc.generated.protobufs.models.AreNumbersPrimeModel;
-import io.simplecoder.grpc.generated.protobufs.models.AreNumbersPrimeRequestChunk;
-import io.simplecoder.grpc.generated.protobufs.models.AreNumbersPrimeResponse;
+import io.simplecoder.grpc.generated.protobufs.AreNumbersPrimeModel;
+import io.simplecoder.grpc.generated.protobufs.AreNumbersPrimeRequestChunk;
+import io.simplecoder.grpc.generated.protobufs.AreNumbersPrimeResponse;
 import io.simplecoder.grpc.utils.PrimeNumbersUtils;
 
 import java.util.ArrayList;

@@ -1,8 +1,7 @@
 package io.simplecoder.grpc.service;
 
-import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
-import io.simplecoder.grpc.generated.protobufs.models.*;
+import io.simplecoder.grpc.generated.protobufs.*;
 import io.simplecoder.grpc.observers.request.AreNumbersPrimeAsyncRequestObserver;
 import io.simplecoder.grpc.observers.request.AreNumbersPrimeRequestObserver;
 import io.simplecoder.grpc.utils.PrimeNumbersUtils;

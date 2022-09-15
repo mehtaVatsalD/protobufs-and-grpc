@@ -1,7 +1,7 @@
 package io.simplecoder.grpc.observers.response;
 
 import io.grpc.stub.StreamObserver;
-import io.simplecoder.grpc.generated.protobufs.models.FirstNPrimeNumbersResponseChunk;
+import io.simplecoder.grpc.generated.protobufs.FirstNPrimeNumbersResponseChunk;
 
 import java.util.concurrent.CountDownLatch;
 
