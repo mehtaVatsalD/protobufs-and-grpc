@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.simplecoder.grpc.generated.protobufs.models";
+
+message NthPrimeNumberRequest {
+    repeated int32 numbers = 1;
+}
+
+message NthPrimeNumberResponse {
+    repeated int64 prime_numbers = 1;
+}
+
+message FirstNPrimeNumbersRequest {
+    int32 n = 1;
+}
+
+message FirstNPrimeNumbersResponseChunk {
+    int64 prime_number = 1;
+}
+
+message AreNumbersPrimeRequestChunk {
+    int32 number = 1;
+}
+
+message AreNumbersPrimeModel {
+    int32 number = 1;
+    bool is_prime = 2;
+}
+
+message AreNumbersPrimeResponse {
+    repeated AreNumbersPrimeModel response = 1;
+}
+
+service PrimeNumbersService {
+    rpc GetNthPrimeNumbers(NthPrimeNumberRequest) returns (NthPrimeNumberResponse);
+    rpc GetFirstNPrimeNumbers(FirstNPrimeNumbersRequest) returns (stream FirstNPrimeNumbersResponseChunk);
+    rpc AreNumbersPrime(stream AreNumbersPrimeRequestChunk) returns (AreNumbersPrimeResponse);
+    rpc AreNumbersPrimeAsync(stream AreNumbersPrimeRequestChunk) returns (stream AreNumbersPrimeModel);
+}
