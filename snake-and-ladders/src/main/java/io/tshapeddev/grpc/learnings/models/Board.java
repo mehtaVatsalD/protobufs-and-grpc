@@ -1,7 +1,5 @@
 package io.tshapeddev.grpc.learnings.models;
 
-import lombok.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,15 +24,7 @@ public class Board {
         return cells.get(position-1);
     }
 
-    public void addPositionShifter(int from, int to, @NonNull PositionShifter positionShifter) {
-        Cell startingCell = getCellAtPosition(from);
-        Cell endingCell = getCellAtPosition(to);
-        startingCell.setPositionShifter(positionShifter);
-        endingCell.setPositionShifter(positionShifter);
-        positionShifter.addCells(startingCell, endingCell);
-    }
-
-    public void resetBord() {
+    private void resetBord() {
         cells.clear();
         for (int i=0; i<NUMBER_OF_CELLS; i++) {
             cells.add(new Cell(i+1));
@@ -51,4 +41,8 @@ public class Board {
         return currentPosition == NUMBER_OF_CELLS;
     }
 
+    @Override
+    public String toString() {
+        return cells.toString();
+    }
 }

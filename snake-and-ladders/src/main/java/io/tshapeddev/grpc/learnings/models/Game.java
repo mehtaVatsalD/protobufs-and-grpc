@@ -1,16 +1,19 @@
 package io.tshapeddev.grpc.learnings.models;
 
 import io.tshapeddev.grpc.learnings.enums.GameStatus;
+import io.tshapeddev.grpc.learnings.enums.PositionShifterType;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.java.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Log
+@Getter
 public class Game {
 
+    private final int id;
     private final Board board;
     private final List<GameToken> gameTokens;
     private final Dice dice;
@@ -18,7 +21,8 @@ public class Game {
     private int turnIndex;
     private GameToken winner;
 
-    public Game() {
+    public Game(int id) {
+        this.id = id;
         this.board = new Board();
         this.dice = new Dice();
         this.gameStatus = GameStatus.CREATED;
@@ -30,39 +34,51 @@ public class Game {
         GameToken gameToken = GameToken.builder()
                 .player(player)
                 .tokenColorHash(tokenColorHash)
-                .currentCell(board.getCellAtPosition(0))
+                .currentCell(board.getCellAtPosition(1))
                 .build();
         gameTokens.add(gameToken);
     }
 
-    public void takeTurnIfPossible() {
+    public TakeTurnOutcome takeTurnIfPossible() {
         checkIfPossibleToTakeTurn();
         log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         GameToken currentGameToken = gameTokens.get(turnIndex);
-        takeTurn(currentGameToken);
+        TakeTurnOutcome takeTurnOutcome = takeTurn(currentGameToken);
+        changeTurn();
         checkForGameCompletion(currentGameToken);
         log.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        return takeTurnOutcome;
     }
 
-    private void takeTurn(GameToken currentGameToken) {
+    private TakeTurnOutcome takeTurn(GameToken currentGameToken) {
         Player currentPlayer = currentGameToken.getPlayer();
         log.info("Current turn: " + currentPlayer.getName());
         int outcomeOfDiceRoll = dice.roll();
         log.info("Dice roll outcome: " + outcomeOfDiceRoll);
-        shiftPosition(currentGameToken, outcomeOfDiceRoll);
+        return shiftPosition(currentGameToken, outcomeOfDiceRoll);
     }
 
-    private void shiftPosition(GameToken currentGameToken, int outcomeOfDiceRoll) {
+    private TakeTurnOutcome shiftPosition(GameToken currentGameToken, int outcomeOfDiceRoll) {
         int currentCellValue = currentGameToken.getCurrentCell().getValue();
         log.info("Current position of player: " + currentCellValue);
+        TakeTurnOutcome.TakeTurnOutcomeBuilder takeTurnOutcomeBuilder = TakeTurnOutcome.builder()
+                .playerTokenWhoTookTurn(currentGameToken)
+                .diceOutCome(outcomeOfDiceRoll)
+                .oldPlace(currentCellValue);
         if (board.isPossibleShiftPlayer(currentCellValue, outcomeOfDiceRoll)) {
             Cell newCell = board.getCellAtPosition(currentCellValue + outcomeOfDiceRoll);
             log.info("New possible position of player: " + newCell.getValue());
             Cell finalNewCell = handlePositionShifterIfPresent(newCell);
             currentGameToken.setCurrentCell(finalNewCell);
+            takeTurnOutcomeBuilder.newPlace(newCell.getValue())
+                    .finalNewPlace(finalNewCell.getValue())
+                    .positionShifterWhichAffectedMove(finalNewCell.getPositionShifter());
         } else {
+            takeTurnOutcomeBuilder.newPlace(currentCellValue)
+                    .finalNewPlace(currentCellValue);
             log.info("Not possible to move as there not enough cells ahead");
         }
+        return takeTurnOutcomeBuilder.build();
     }
 
     private Cell handlePositionShifterIfPresent(Cell newCell) {
@@ -87,7 +103,25 @@ public class Game {
         }
     }
 
+    public void addPositionShifter(int from, int to, @NonNull PositionShifterType positionShifterType) {
+        Cell startingCell = board.getCellAtPosition(from);
+        Cell endingCell = board.getCellAtPosition(to);
+        PositionShifter positionShifter = getPositionShifterByType(positionShifterType);
+        startingCell.setPositionShifter(positionShifter);
+        endingCell.setPositionShifter(positionShifter);
+        positionShifter.addCells(startingCell, endingCell);
+    }
+
+    private PositionShifter getPositionShifterByType(PositionShifterType positionShifterType) {
+        return positionShifterType == PositionShifterType.SNAKE
+            ? new Snake()
+            : new Ladder();
+    }
+
     public void startGame() {
+        if (gameTokens.size() < 2) {
+            throw new IllegalStateException("At least add two players to start the game");
+        }
         gameStatus = GameStatus.RUNNING;
     }
 
@@ -97,14 +131,6 @@ public class Game {
 
     public GameToken whoseTurnIsItNext() {
         return gameTokens.get(turnIndex);
-    }
-
-    public int whatsOnTopOfDice() {
-        return dice.getTop();
-    }
-
-    public Optional<GameToken> whoWon() {
-        return winner == null ? Optional.empty() : Optional.of(winner);
     }
 
     private void changeTurn() {

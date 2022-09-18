@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Snake implements PositionShifter {
 
-    private int id;
     private final PositionShifterType positionShifterType = PositionShifterType.SNAKE;
     private Cell head;
     private Cell tail;
@@ -31,5 +30,20 @@ public class Snake implements PositionShifter {
     public void addCells(@NonNull Cell startingCell, @NonNull Cell endCell) {
         this.head = startingCell;
         this.tail = endCell;
+    }
+
+    @Override
+    public Cell from() {
+        return head;
+    }
+
+    @Override
+    public Cell to() {
+        return tail;
+    }
+
+    @Override
+    public String toString() {
+        return "Snake(" + head.getValue() + "->" + tail.getValue() + ")";
     }
 }

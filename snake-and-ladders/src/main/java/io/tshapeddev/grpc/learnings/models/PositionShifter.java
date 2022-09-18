@@ -8,6 +8,7 @@ public interface PositionShifter {
     Cell getNewPosition(@NonNull Cell currentCell);
     void addCells(@NonNull Cell startingCell, @NonNull Cell endCell);
     PositionShifterType getPositionShifterType();
-    int getId();
+    Cell from();
+    Cell to();
 
 }

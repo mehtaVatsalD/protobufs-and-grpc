@@ -1,6 +1,7 @@
 package io.tshapeddev.grpc.learnings.models;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class Cell {
@@ -11,5 +12,10 @@ public class Cell {
 
     public Cell(int value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value + "[" + ((positionShifter == null) ? "" : positionShifter) + "]";
     }
 }

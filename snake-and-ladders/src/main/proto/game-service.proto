@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option java_package = "io.tshapeddev.grpc.learnings.generated";
+option java_multiple_files = true;
+
+enum GameStatus {
+    CREATED = 0;
+    RUNNING = 1;
+    COMPLETED = 2;
+    ABORTED = 3;
+}
+
+message GameToken {
+    string player_name = 1;
+    int32 current_cell = 2;
+    string token_color_hash = 3;
+}
+
+message AddPlayersRequest {
+    int32 game_id = 1;
+    repeated GameToken game_tokens = 2;
+}
+
+message CreateNewGameRequest {
+    int32 id = 1;
+}
+
+message GameResponse {
+    int32 id = 1;
+    repeated GameToken game_tokens = 2;
+    GameStatus game_status = 3;
+    GameToken winner = 4;
+    string board_display = 5;
+}
+
+message GetGameRequest {
+    int32 id = 1;
+}
+
+enum PositionShifterType {
+    SNAKE = 0;
+    LADDER = 1;
+}
+
+message PositionShifter {
+    PositionShifterType position_shifter_type = 1;
+    int32 start = 2;
+    int32 end = 3;
+}
+
+message AddPositionShifterRequest {
+    int32 game_id = 1;
+    PositionShifter position_shifter = 2;
+}
+
+message AddPositionShifterResponse {
+    int32 game_id = 1;
+    string board_display = 2;
+}
+
+message TakeTurnGameResponse {
+    TakeTurnOutcome take_turn_outcome = 1;
+    GameResponse game_response = 7;
+}
+
+message TakeTurnOutcome {
+    string player_who_took_turn = 1;
+    int32 dice_outcome = 2;
+    int32 old_place = 3;
+    int32 new_place = 4;
+    int32 final_new_place = 5;
+    PositionShifter position_shifter_affecting_move = 6;
+}
+
+message StartGameRequest {
+        int32 game_id = 1;
+}
+
+message AbortGameRequest {
+    int32 game_id = 1;
+}
+
+message TakeTurnRequest {
+    int32 game_id = 1;
+}
+
+service GameService {
+
+    rpc CreateNewGame(CreateNewGameRequest) returns (GameResponse);
+    rpc GetGame(GetGameRequest) returns (GameResponse);
+    rpc AddPlayersToGame(AddPlayersRequest) returns (GameResponse);
+    rpc StartGame(StartGameRequest) returns (GameResponse);
+    rpc AbortGame(AbortGameRequest) returns (GameResponse);
+    rpc AddPositionShifters(stream AddPositionShifterRequest) returns (stream AddPositionShifterResponse);
+    rpc TakeTurn(TakeTurnRequest) returns (TakeTurnGameResponse);
+
+
+}

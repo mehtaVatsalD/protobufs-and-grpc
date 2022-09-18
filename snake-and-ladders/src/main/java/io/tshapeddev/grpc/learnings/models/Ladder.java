@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class Ladder implements PositionShifter {
 
-    private int id;
     private final PositionShifterType positionShifterType = PositionShifterType.LADDER;
     private Cell base;
     private Cell tip;
@@ -29,10 +28,22 @@ public class Ladder implements PositionShifter {
 
     @Override
     public void addCells(@NonNull Cell startingCell, @NonNull Cell endCell) {
-        this.tip = startingCell;
-        this.base = endCell;
+        this.base = startingCell;
+        this.tip = endCell;
     }
 
+    @Override
+    public Cell from() {
+        return base;
+    }
 
+    @Override
+    public Cell to() {
+        return tip;
+    }
 
+    @Override
+    public String toString() {
+        return "Ladder(" + base.getValue() + "->" + tip.getValue() + ")";
+    }
 }

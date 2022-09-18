@@ -13,4 +13,8 @@ public class GameToken {
     private Cell currentCell;
     private String tokenColorHash;
 
+    @Override
+    public String toString() {
+        return "(" + player + ")@ " + currentCell.getValue() + "";
+    }
 }
