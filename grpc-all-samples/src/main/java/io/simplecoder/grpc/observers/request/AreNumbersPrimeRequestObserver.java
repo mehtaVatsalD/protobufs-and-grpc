@@ -25,6 +25,7 @@ public class AreNumbersPrimeRequestObserver implements StreamObserver<AreNumbers
     @Override
     public void onNext(AreNumbersPrimeRequestChunk areNumbersPrimeRequestChunk) {
         int number = areNumbersPrimeRequestChunk.getNumber();
+        System.out.println(number);
         checkIfValidForIsPrime(number, responseStreamObserver);
         AreNumbersPrimeModel areNumbersPrimeModel = AreNumbersPrimeModel.newBuilder()
                 .setNumber(number)

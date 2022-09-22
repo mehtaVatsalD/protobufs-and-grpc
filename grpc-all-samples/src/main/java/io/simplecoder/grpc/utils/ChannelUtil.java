@@ -8,10 +8,16 @@ public final class ChannelUtil {
     private ChannelUtil() {}
 
     public static ManagedChannel getManagedChannel() {
-        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress("localhost", 8888)
+        return ManagedChannelBuilder.forAddress("localhost", 6565)
                 .usePlaintext()
                 .build();
-        return managedChannel;
+    }
+
+    public static ManagedChannel getManagedChannelLoadBalanced() {
+        return ManagedChannelBuilder.forTarget("prime-numbers-service")
+                .usePlaintext()
+                .defaultLoadBalancingPolicy("round_robin")
+                .build();
     }
 
 }

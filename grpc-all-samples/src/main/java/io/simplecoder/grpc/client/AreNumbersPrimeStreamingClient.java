@@ -18,7 +18,7 @@ public class AreNumbersPrimeStreamingClient {
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
         StreamObserver<AreNumbersPrimeRequestChunk> areNumbersPrimeRequestObserver = stub.areNumbersPrime(new AreNumbersPrimeResponseObserver(countDownLatch));
-        for (int i=0; i<15; i++) {
+        for (int i=0; i<100; i++) {
             int randomVal;
             Random random = new Random();
             do {

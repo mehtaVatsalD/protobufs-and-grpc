@@ -6,10 +6,10 @@ import io.simplecoder.grpc.service.PrimeNumbersService;
 
 import java.io.IOException;
 
-public class ServerMain {
+public class ServerMain2 {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        int port = 6565;
+        int port = 7575;
         System.out.println("Starting server");
         Server server = ServerBuilder.forPort(port)
                 .addService(new PrimeNumbersService())

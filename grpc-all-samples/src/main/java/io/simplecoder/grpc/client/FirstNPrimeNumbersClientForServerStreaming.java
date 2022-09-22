@@ -1,10 +1,12 @@
 package io.simplecoder.grpc.client;
 
+import io.grpc.Deadline;
 import io.simplecoder.grpc.generated.protobufs.FirstNPrimeNumbersRequest;
 import io.simplecoder.grpc.generated.protobufs.PrimeNumbersServiceGrpc;
 import io.simplecoder.grpc.observers.response.FirstNPrimeNumbersResponseObserver;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static io.simplecoder.grpc.utils.ChannelUtil.getManagedChannel;
 
@@ -16,7 +18,9 @@ public class FirstNPrimeNumbersClientForServerStreaming {
         FirstNPrimeNumbersRequest firstNPrimeNumbersRequest = FirstNPrimeNumbersRequest.newBuilder()
                 .setN(10)
                 .build();
-        blockingStub.getFirstNPrimeNumbers(firstNPrimeNumbersRequest)
+        blockingStub
+                .withDeadline(Deadline.after(4, TimeUnit.SECONDS))
+                .getFirstNPrimeNumbers(firstNPrimeNumbersRequest)
                 .forEachRemaining(System.out::println);
         System.out.println("Done!!!");
 

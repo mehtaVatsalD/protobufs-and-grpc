@@ -1,5 +1,7 @@
 package io.simplecoder.grpc.service;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+import io.grpc.Context;
 import io.grpc.stub.StreamObserver;
 import io.simplecoder.grpc.generated.protobufs.*;
 import io.simplecoder.grpc.observers.request.AreNumbersPrimeAsyncRequestObserver;
@@ -8,6 +10,7 @@ import io.simplecoder.grpc.utils.PrimeNumbersUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static io.simplecoder.grpc.utils.ValidityUtil.checkIfValidForIsPrime;
 
@@ -16,6 +19,7 @@ public class PrimeNumbersService extends PrimeNumbersServiceGrpc.PrimeNumbersSer
     @Override
     public void getNthPrimeNumbers(NthPrimeNumberRequest request, StreamObserver<NthPrimeNumberResponse> responseObserver) {
         List<Integer> numbers = request.getNumbersList();
+        System.out.println(numbers);
         List<Long> primeNumbers = new ArrayList<>();
         for (Integer n: numbers) {
             checkIfValidForIsPrime(n, responseObserver);
@@ -24,22 +28,32 @@ public class PrimeNumbersService extends PrimeNumbersServiceGrpc.PrimeNumbersSer
         NthPrimeNumberResponse nthPrimeNumberResponse = NthPrimeNumberResponse.newBuilder()
                 .addAllPrimeNumbers(primeNumbers)
                 .build();
+        //sleep to simulate load on server... to test deadline
+        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
         responseObserver.onNext(nthPrimeNumberResponse);
         responseObserver.onCompleted();
+        System.out.println(nthPrimeNumberResponse);
     }
 
     @Override
     public void getFirstNPrimeNumbers(FirstNPrimeNumbersRequest request, StreamObserver<FirstNPrimeNumbersResponseChunk> responseObserver) {
         int n = request.getN();
+        System.out.println(n);
         for (int i=1; i<=n; i++) {
-            responseObserver.onNext(
-                    FirstNPrimeNumbersResponseChunk.newBuilder()
+            if (Context.current().isCancelled()) {
+                System.out.println("Chalo jane do kisi ko padi hi nai hai response ki!");
+                break;
+            }
+            FirstNPrimeNumbersResponseChunk firstNPrimeNumbersResponseChunk = FirstNPrimeNumbersResponseChunk.newBuilder()
                     .setPrimeNumber(PrimeNumbersUtils.getNthPrimeNumber(i))
-                    .build()
+                    .build();
+            System.out.println(firstNPrimeNumbersResponseChunk);
+            responseObserver.onNext(
+                    firstNPrimeNumbersResponseChunk
             );
             //explicit sleep to know the behaviour of server streaming
             try {
-                Thread.sleep(500);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 System.err.println(e);
             }
