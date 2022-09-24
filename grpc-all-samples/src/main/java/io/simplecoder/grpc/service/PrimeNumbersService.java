@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static io.simplecoder.grpc.server.constants.ServerConstants.DELAY_IN_SECONDS_CONTEXT_KEY;
 import static io.simplecoder.grpc.utils.ValidityUtil.checkIfValidForIsPrime;
 
 public class PrimeNumbersService extends PrimeNumbersServiceGrpc.PrimeNumbersServiceImplBase {
@@ -29,7 +30,10 @@ public class PrimeNumbersService extends PrimeNumbersServiceGrpc.PrimeNumbersSer
                 .addAllPrimeNumbers(primeNumbers)
                 .build();
         //sleep to simulate load on server... to test deadline
-        Uninterruptibles.sleepUninterruptibly(5, TimeUnit.SECONDS);
+        //sleep value we will take from context just for fun!
+        //this sleep is sent by client themselves using headers!
+        //if not sent then we will use default
+        Uninterruptibles.sleepUninterruptibly(DELAY_IN_SECONDS_CONTEXT_KEY.get(), TimeUnit.SECONDS);
         responseObserver.onNext(nthPrimeNumberResponse);
         responseObserver.onCompleted();
         System.out.println(nthPrimeNumberResponse);

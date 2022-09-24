@@ -8,6 +8,7 @@ import io.simplecoder.grpc.generated.protobufs.PrimeNumbersServiceGrpc;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import static io.simplecoder.grpc.client.contants.ClientConstants.RPC_TYPE_CALL_OPTION_KEY;
 import static io.simplecoder.grpc.utils.ChannelUtil.getManagedChannel;
 
 public class NthPrimeNumbersUnaryClient {
@@ -23,7 +24,8 @@ public class NthPrimeNumbersUnaryClient {
                     .build();
             System.out.println(nthPrimeNumberRequest);
             NthPrimeNumberResponse nthPrimeNumbers = blockingStub
-                    .withDeadline(Deadline.after(2, TimeUnit.SECONDS))
+                    .withDeadline(Deadline.after(10, TimeUnit.SECONDS))
+                    .withOption(RPC_TYPE_CALL_OPTION_KEY, "unary")
                     .getNthPrimeNumbers(nthPrimeNumberRequest);
             System.out.println(nthPrimeNumbers);
         }
